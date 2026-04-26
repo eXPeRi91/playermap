@@ -47,6 +47,26 @@ body {
     background-image: url(<?php echo $img_base ?>northrend.jpg);
     z-index: 8;
 }
+#pandaria {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    background-image: url(<?php echo htmlentities($map_pandaria_image_url); ?>);
+    z-index: 7;
+}
+#draenor {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    background-image: url(<?php echo htmlentities($map_draenor_image_url); ?>);
+    z-index: 6;
+}
 
 #brokenisles {
     visibility: hidden;
@@ -55,6 +75,7 @@ body {
     width: 966px;
     left: 50%;
     margin-left: -483px;
+    background-image: url(<?php echo htmlentities($map_legion_image_url); ?>);
     background-image: url(<?php echo $img_base ?>brokenisles.jpg);
     z-index: 7;
 }
@@ -84,6 +105,24 @@ body {
     margin-left: -483px;
     z-index: 98;
 }
+#pointsPandaria {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    z-index: 97;
+}
+#pointsDraenor {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    z-index: 96;
+}
 
 #pointsBrokenIsles {
     visibility: hidden;
@@ -92,6 +131,7 @@ body {
     width: 966px;
     left: 50%;
     margin-left: -483px;
+    z-index: 95;
     z-index: 97;
 }
 #wow {
@@ -249,6 +289,10 @@ instances_x[2] = { 533:568,574:749,575:751,576:161,578:159,599:553,600:605,601:3
 instances_y[2] = { 533:456,574:577,575:583,576:443,578:451,599:195,600:406,601:462,602:180,603:169,604:292,608:360,615:461,616:447,617:352,619:462,624:369 }
 instances_x[3] = {}
 instances_y[3] = {}
+instances_x[4] = {}
+instances_y[4] = {}
+instances_x[5] = {}
+instances_y[5] = {}
 
 var fade_colors = Array('C6B711','BDAF10','B7A910','B1A40F','AB9E0F','A4980E','9E920E','988C0D','92870D','8B800C','857B0B','7F750B','79700A','746B0A','6E6609','686009','625B08','5C5508','564F07','504A07','4A4406','443F05','3E3905','383404','312D04','2A2703','232002','1C1A02','141201','000000');
 var fade_cur_color = fade_colors.length-1;
@@ -464,6 +508,14 @@ function get_player_position(x,y,m)
    xpos = Math.round(x * 0.050085);
    ypos = Math.round(y * 0.050085);
    }
+ else if(m == 870) { // Pandaria
+   xpos = Math.round(x * <?php echo $map_pandaria_scale; ?>);
+   ypos = Math.round(y * <?php echo $map_pandaria_scale; ?>);
+   }
+ else if(m == 1116) { // Draenor
+   xpos = Math.round(x * <?php echo $map_draenor_scale; ?>);
+   ypos = Math.round(y * <?php echo $map_draenor_scale; ?>);
+   }
  else if(m == 1220) { // Broken Isles (Legion)
    xpos = Math.round(x * <?php echo $map_legion_scale; ?>);
    ypos = Math.round(y * <?php echo $map_legion_scale; ?>);
@@ -491,6 +543,14 @@ function get_player_position(x,y,m)
    case '609':
     pos.x = 896 - ypos;
     pos.y = 232 - xpos;
+    break;
+   case '870':
+    pos.x = <?php echo (int)$map_pandaria_offset_x; ?> - ypos;
+    pos.y = <?php echo (int)$map_pandaria_offset_y; ?> - xpos;
+    break;
+   case '1116':
+    pos.x = <?php echo (int)$map_draenor_offset_x; ?> - ypos;
+    pos.y = <?php echo (int)$map_draenor_offset_y; ?> - xpos;
     break;
    case '1220':
     pos.x = <?php echo (int)$map_legion_offset_x; ?> - ypos;
@@ -534,6 +594,10 @@ function getMapLayerByID(id)
     case 2:
       return document.getElementById("northrend"); break;
     case 3:
+      return document.getElementById("pandaria"); break;
+    case 4:
+      return document.getElementById("draenor"); break;
+    case 5:
       return document.getElementById("brokenisles"); break;
     default:
       return null;
@@ -551,6 +615,10 @@ function getPointsLayerByID(id)
     case 2:
       return document.getElementById("pointsNorthrend"); break;
     case 3:
+      return document.getElementById("pointsPandaria"); break;
+    case 4:
+      return document.getElementById("pointsDraenor"); break;
+    case 5:
       return document.getElementById("pointsBrokenIsles"); break;
     default:
       return null;
@@ -945,10 +1013,14 @@ function start()
 <div ID="pointsOldworld"></div>
 <div ID="pointsOutland"></div>
 <div ID="pointsNorthrend"></div>
+<div ID="pointsPandaria"></div>
+<div ID="pointsDraenor"></div>
 <div ID="pointsBrokenIsles"></div>
 <div ID="world"></div>
 <div ID="outland"></div>
 <div ID="northrend"></div>
+<div ID="pandaria"></div>
+<div ID="draenor"></div>
 <div ID="brokenisles"></div>
 <div ID="wow"><img src="<?php echo $img_base ?>realm_on.gif" id="statusIMG" style="position: absolute; border: 0px; left: 365; top: 0;" onClick="window.location='<?php echo $_SERVER['PHP_SELF'] ?>'"></a>
 </div>

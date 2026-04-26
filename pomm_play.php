@@ -9,6 +9,13 @@ $_RESULT = NULL;
 
 $maps_count = count($lang_defs['maps_names']);
 
+$horde_race_ids = array(2,5,6,8,9,10,26);
+$alliance_race_ids = array(1,3,4,7,11,22,25);
+$outland_inst   = array(540,542,543,544,545,546,547,548,550,552,553,554,555,556,557,558,559,562,564,565);
+$northrend_inst = array(533,574,575,576,578,599,600,601,602,603,604,608,615,616,617,619,624);
+// Post-3.3.5 maps (sourced from WoWHead/Legion-era map IDs where applicable).
+$pandaria_inst = array(959,960,961,962,994,996,1008,1009,1011,1014,1098,1136,1138,1148,1175,1182,1205,1265);
+$draenor_inst = array(1176,1182,1195,1208,1279,1329,1358,1448,1449,1450,1464,1475,1520,1651);
 $Horde_races = 0x2B2;
 $Alliance_races = 0x44D;
 $outland_inst   = array(540,542,543,544,545,546,547,548,550,552,553,554,555,556,557,558,559,562,564,565);
@@ -55,6 +62,9 @@ for($i = 0; $i < $maps_count; $i++) {
     }
 $arr = array();
 $i=$maps_count;
+$query = $characters_db->query("SELECT `guid`,`account`,`name`,`class`,`race`, `level`, `gender`, `position_x`,`position_y`,`map`,`zone`,`extra_flags` FROM `characters` WHERE `online`='1' ORDER BY `name`");
+if(!$query)
+    $query = $characters_db->query("SELECT `guid`,`account`,`name`,`class`,`race`, `level`, `gender`, `position_x`,`position_y`,`map`,`zone`, 0 AS `extra_flags` FROM `characters` WHERE `online`='1' ORDER BY `name`");
 $query = $characters_db->query("SELECT `account`,`name`,`class`,`race`, `level`, `gender`, `position_x`,`position_y`,`map`,`zone`,`extra_flags` FROM `characters` WHERE `online`='1' ORDER BY `name`");
 while($result = $characters_db->fetch_assoc($query))
 {
@@ -62,6 +72,12 @@ while($result = $characters_db->fetch_assoc($query))
         $Extention = 1;
     else if($result['map'] == 571 || in_array($result['map'], $northrend_inst))
         $Extention = 2;
+    else if($result['map'] == 870 || in_array($result['map'], $pandaria_inst))
+        $Extention = 3;
+    else if($result['map'] == 1116 || in_array($result['map'], $draenor_inst))
+        $Extention = 4;
+    else if($result['map'] == 1220 || in_array($result['map'], $legion_inst))
+        $Extention = 5;
     else if($result['map'] == 1220 || in_array($result['map'], $legion_inst))
         $Extention = 3;
     else
@@ -87,6 +103,9 @@ while($result = $characters_db->fetch_assoc($query))
 
     if($gm_player == false || ($gm_player == true && $gm_include_online == 1))
     {
+        if(in_array((int)$result['race'], $horde_race_ids, true))
+            $Count[$Extention][1]++;
+        else if(in_array((int)$result['race'], $alliance_race_ids, true))
         if($Horde_races & (0x1 << ($result['race']-1)))
             $Count[$Extention][1]++;
         else if($Alliance_races & (0x1 << ($result['race']-1)))
@@ -112,6 +131,7 @@ while($result = $characters_db->fetch_assoc($query))
     $arr[$i]['level']=$result['level'];
     $arr[$i]['gender'] = $result['gender'];
     $arr[$i]['Extention'] = $Extention;
+    $arr[$i]['leaderGuid'] = isset($groups[$result['guid']]) ? $groups[$result['guid']] : 0;
     $arr[$i]['leaderGuid'] = isset($groups[$char_data]) ? $groups[$char_data] : 0;
     $i++;
 }

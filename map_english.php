@@ -32,6 +32,7 @@ $character_class = Array(
   12 => 'Demon Hunter');
 
 $lang_defs = Array(
+  'maps_names' => Array('Azeroth','Outland','Northrend','Pandaria','Draenor','Broken Isles'),
   'maps_names' => Array('Azeroth','Outland','Northrend','Broken Isles'),
   'total' => 'Total',
   'faction' => Array('Alliance', 'Horde'),

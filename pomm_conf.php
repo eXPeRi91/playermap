@@ -54,6 +54,7 @@ $time = $map_time;
 $show_time = $map_show_time;
 
 // points located on these maps(do not modify it)
+$maps_for_points = "0,1,530,571,609,870,1116,1220";
 $maps_for_points = "0,1,530,571,609,1220";
 
 $img_base = "img/map/";
@@ -63,6 +64,52 @@ $PLAYER_FLAGS       = CHAR_DATA_OFFSET_FLAGS;
 
 // Broken Isles (Legion, map 1220) render tuning values.
 // If markers look offset for your map asset, tune these values.
+$map_pandaria_scale = isset($map_pandaria_scale) ? $map_pandaria_scale : 0.050000;
+$map_pandaria_offset_x = isset($map_pandaria_offset_x) ? $map_pandaria_offset_x : 515;
+$map_pandaria_offset_y = isset($map_pandaria_offset_y) ? $map_pandaria_offset_y : 475;
+
+$map_draenor_scale = isset($map_draenor_scale) ? $map_draenor_scale : 0.050000;
+$map_draenor_offset_x = isset($map_draenor_offset_x) ? $map_draenor_offset_x : 500;
+$map_draenor_offset_y = isset($map_draenor_offset_y) ? $map_draenor_offset_y : 380;
+
+function sanitize_map_img_int($value, $default)
+{
+  if (!isset($value))
+    return $default;
+
+  $intValue = intval($value);
+  return $intValue >= 0 ? $intValue : $default;
+}
+
+function build_map_image_url($baseUrl, $zoneId, $phase, $fallbackZoneId)
+{
+  $zoneId = sanitize_map_img_int($zoneId, $fallbackZoneId);
+  $phase = sanitize_map_img_int($phase, 0);
+
+  if (!isset($baseUrl) || !is_string($baseUrl))
+    $baseUrl = "https://wow.zamimg.com/images/wow/maps/enus/original/";
+
+  if (strpos($baseUrl, "https://wow.zamimg.com/images/wow/maps/enus/original/") !== 0)
+    $baseUrl = "https://wow.zamimg.com/images/wow/maps/enus/original/";
+
+  return $baseUrl.$zoneId."-".$phase.".jpg";
+}
+
+$map_remote_image_base = isset($map_remote_image_base) ? $map_remote_image_base : "https://wow.zamimg.com/images/wow/maps/enus/original/";
+
+$map_pandaria_zone_id = sanitize_map_img_int(isset($map_pandaria_zone_id) ? $map_pandaria_zone_id : null, 870);
+$map_pandaria_phase = sanitize_map_img_int(isset($map_pandaria_phase) ? $map_pandaria_phase : null, 0);
+
+$map_draenor_zone_id = sanitize_map_img_int(isset($map_draenor_zone_id) ? $map_draenor_zone_id : null, 5723);
+$map_draenor_phase = sanitize_map_img_int(isset($map_draenor_phase) ? $map_draenor_phase : null, 0);
+
+$map_legion_zone_id = sanitize_map_img_int(isset($map_legion_zone_id) ? $map_legion_zone_id : null, 7543);
+$map_legion_phase = sanitize_map_img_int(isset($map_legion_phase) ? $map_legion_phase : null, 0);
+
+$map_pandaria_image_url = build_map_image_url($map_remote_image_base, $map_pandaria_zone_id, $map_pandaria_phase, 870);
+$map_draenor_image_url = build_map_image_url($map_remote_image_base, $map_draenor_zone_id, $map_draenor_phase, 5723);
+$map_legion_image_url = build_map_image_url($map_remote_image_base, $map_legion_zone_id, $map_legion_phase, 7543);
+
 $map_legion_scale = isset($map_legion_scale) ? $map_legion_scale : 0.040;
 $map_legion_offset_x = isset($map_legion_offset_x) ? $map_legion_offset_x : 483;
 $map_legion_offset_y = isset($map_legion_offset_y) ? $map_legion_offset_y : 366;
