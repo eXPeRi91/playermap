@@ -10,7 +10,7 @@ header('X-Frame-Options: SAMEORIGIN');
 header('Referrer-Policy: strict-origin-when-cross-origin');
 
 ?>
-<HTML><HEAD><title>Online Playermap by Lasoto</title>
+<HTML><HEAD><title>Online Playermap v<?php echo PLAYERMAP_VERSION; ?> by Lasoto</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <style type="text/css">
 <!--

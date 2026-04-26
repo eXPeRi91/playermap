@@ -1,5 +1,9 @@
 # AzerothShard Playermap
 
+Current version: **1.0.0.A** (Alpha)
+
+For setup steps, see **[INSTALLATION.md](INSTALLATION.md)**.
+
 ## Configure
 
 Make a copy of config/playermap_config.php.conf and configure it.
@@ -13,6 +17,7 @@ Open pomm_conf.php and set the realmd_id
   - `https://wow.zamimg.com/images/wow/maps/enus/original/<zone>-<phase>.jpg`
   - Example (Broken Shore): `https://wow.zamimg.com/images/wow/maps/enus/original/7543-0.jpg`
 - Important: use **Wowhead zone IDs** (not map IDs) for `<zone>`.
+- Final tuning: player tooltips now expose a direct **Zone image** link generated from each character's live `zone` ID, so missing Cata → Legion zone images can be opened with the same URL pattern.
 - If markers are offset on your map images, tune the map parameters in `config/playermap_config.php`:
   - `$map_pandaria_scale`, `$map_pandaria_offset_x`, `$map_pandaria_offset_y`
   - `$map_draenor_scale`, `$map_draenor_offset_x`, `$map_draenor_offset_y`
