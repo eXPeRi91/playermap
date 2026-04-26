@@ -5,6 +5,9 @@ require_once("pomm_conf.php");
 require_once("func.php");
 require_once("map_english.php");
 
+header('X-Content-Type-Options: nosniff');
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+
 $_RESULT = NULL;
 
 $maps_count = count($lang_defs['maps_names']);
@@ -97,6 +100,7 @@ while($result = $characters_db->fetch_assoc($query))
             if(($result['extra_flags'] & 0x10) != 0 && $gm_show_online_only_gmvisible == 1)
                 $show_player = false;
             if($gm_add_suffix && $show_player)
+                $result['name'] = $result['name'].' {GM}';
                 $result['name'] = $result['name'].' <small style="color: #EABA28;">{GM}</small>';
         }
     }
@@ -120,6 +124,18 @@ while($result = $characters_db->fetch_assoc($query))
     $char_data = 0;
     $char_flags = $char_data;
     $char_dead = ($char_flags & 0x11)?1:0;
+    $arr[$i]['x'] = (float)$result['position_x'];
+    $arr[$i]['y'] = (float)$result['position_y'];
+    $arr[$i]['dead'] = $char_dead;
+    $arr[$i]['name'] = htmlspecialchars($result['name'], ENT_QUOTES, 'UTF-8');
+    $arr[$i]['map'] = (int)$result['map'];
+    $arr[$i]['zone'] = htmlspecialchars(get_zone_name((int)$result['zone']), ENT_QUOTES, 'UTF-8');
+    $arr[$i]['cl'] = (int)$result['class'];
+    $arr[$i]['race'] = (int)$result['race'];
+    $arr[$i]['level'] = (int)$result['level'];
+    $arr[$i]['gender'] = (int)$result['gender'];
+    $arr[$i]['Extention'] = (int)$Extention;
+    $arr[$i]['leaderGuid'] = isset($groups[$result['guid']]) ? (int)$groups[$result['guid']] : 0;
     $arr[$i]['x'] = $result['position_x'];
     $arr[$i]['y'] = $result['position_y'];
     $arr[$i]['dead'] = $char_dead;

@@ -6,6 +6,11 @@ require_once 'libs/data_lib.php';
 
 
 //$realm_id = intval( $_COOKIE['cur_selected_realmd'] );
+$server_arr = $server;
+
+$realm_id = isset($_COOKIE['cur_selected_realmd']) ? intval($_COOKIE['cur_selected_realmd']) : 1;
+if(!isset($server_arr[$realm_id]))
+  $realm_id = 1; // Safe fallback realm_id
 
 $realm_id = 1; // Set the realm_id
 
@@ -20,6 +25,7 @@ if (isset($_COOKIE["lang"]))
 else {$lang = $language;}
 
 
+$database_encoding = preg_match('/^[a-zA-Z0-9_\\-]+$/', $site_encoding) ? $site_encoding : 'utf8';
 $database_encoding = $site_encoding;
 
 $server = $server_arr[$realm_id]["addr"];
@@ -38,6 +44,7 @@ $dbr = $realm_db["name"];
 $sql = new DBLayer($hostr, $userr, $passwordr, $dbr);
 $query = $sql->query("SELECT name FROM realmlist WHERE id = ".$realm_id);
 $realm_name = $sql->fetch_assoc($query);
+$realm_name = htmlspecialchars($realm_name["name"], ENT_QUOTES, 'UTF-8');
 $realm_name = htmlentities($realm_name["name"]);
 
 $gm_show_online = $gm_online;

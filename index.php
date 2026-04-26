@@ -5,6 +5,10 @@ require_once("pomm_conf.php");
 require_once("func.php");
 require_once("map_english.php");
 
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
 ?>
 <HTML><HEAD><title>Online Playermap by Lasoto</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -54,6 +58,7 @@ body {
     width: 966px;
     left: 50%;
     margin-left: -483px;
+    background-image: url('<?php echo htmlspecialchars($map_pandaria_image_url, ENT_QUOTES, 'UTF-8'); ?>');
     background-image: url(<?php echo htmlentities($map_pandaria_image_url); ?>);
     z-index: 7;
 }
@@ -64,6 +69,7 @@ body {
     width: 966px;
     left: 50%;
     margin-left: -483px;
+    background-image: url('<?php echo htmlspecialchars($map_draenor_image_url, ENT_QUOTES, 'UTF-8'); ?>');
     background-image: url(<?php echo htmlentities($map_draenor_image_url); ?>);
     z-index: 6;
 }
@@ -75,6 +81,7 @@ body {
     width: 966px;
     left: 50%;
     margin-left: -483px;
+    background-image: url('<?php echo htmlspecialchars($map_legion_image_url, ENT_QUOTES, 'UTF-8'); ?>');
     background-image: url(<?php echo htmlentities($map_legion_image_url); ?>);
     background-image: url(<?php echo $img_base ?>brokenisles.jpg);
     z-index: 7;
@@ -262,6 +269,11 @@ var show_time=<?php echo $show_time ?>;
 var show_status=<?php echo $show_status ?>;
 var maps_count = <?php echo count($lang_defs['maps_names']); ?>;
 var maps_array = new Array(<?php echo $maps_for_points ?>);
+var maps_name_array = <?php echo json_encode(array_values($lang_defs['maps_names']), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+
+var race_name = <?php echo json_encode($character_race, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+
+var class_name = <?php echo json_encode($character_class, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 var maps_name_array = new Array(<?php echo "'".implode("','", $lang_defs['maps_names'])."'" ?>);
 
 var race_name = {<?php echo "0:''"; foreach($character_race as $id => $race) echo(", ".$id.":'".$race."'"); ?>}
@@ -420,6 +432,7 @@ function getMultiText(multitext, onClick)
       group_line = '<tr\><td colspan=\'7\' bgcolor=\'#11FF99\' height=\'1px\'\></td\></tr\>';
     else
       group_line = '';
+    data += group_line + '<tr class=\'tip_text\'><td align=\'left\'\>&nbsp;'+(multitext.current + i + 1)+'&nbsp;</td\>'+multitext.text[multitext.current + i]+'</tr\>';
     data += group_line + '<tr class=\'tip_text\'><td align=\'left\'\>&nbsp;'+eval(multitext.current + i + 1)+'&nbsp;</td\>'+multitext.text[multitext.current + i]+'</tr\>';
     i++;
   }
@@ -673,6 +686,8 @@ function show(data)
     instances[i] = '';
     groups[i] = '';
     single[i] = '';
+    alliance_count[i] = Number(data[i][0]) || 0;
+    horde_count[i] = Number(data[i][1]) || 0;
     alliance_count[i] = eval(data[i][0]);
     horde_count[i] = eval(data[i][1]);
   }
@@ -733,6 +748,7 @@ function show(data)
       mpoints[point_count].name = data[i].name;
       mpoints[point_count].zone = data[i].zone;
       mpoints[point_count].player = 1;
+      mpoints[point_count].Extention = Number(data[i].Extention) || 0;
       mpoints[point_count].Extention = eval(data[i].Extention);
       if(in_array(data[i].map, maps_array))
       {
@@ -799,6 +815,7 @@ function show(data)
     total_players_count[1] += horde_count[i];
   }
 
+  document.getElementById("server_info").innerHTML='online: <b style="color: rgb(100,100,100);" onMouseMove="tip(\'<tr\><td\><img src=\\\'<?php echo $img_base ?>hordeicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(210,50,30);\\\'\><?php echo $lang_defs['faction'][1]; ?>:</b\> <b\>'+total_players_count[1]+'</b\></td\></tr\><tr\><td\><img src=\\\'<?php echo $img_base ?>allianceicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(0,150,190);\\\'\><?php echo $lang_defs['faction'][0]; ?>:</b\> <b\>'+total_players_count[0]+'</b\></td\></tr\>\',2,false);" onMouseOut="h_tip();"><?php echo $lang_defs['total']; ?></b> '+(total_players_count[0]+total_players_count[1])+'';
   document.getElementById("server_info").innerHTML='online: <b style="color: rgb(100,100,100);" onMouseMove="tip(\'<tr\><td\><img src=\\\'<?php echo $img_base ?>hordeicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(210,50,30);\\\'\><?php echo $lang_defs['faction'][1]; ?>:</b\> <b\>'+total_players_count[1]+'</b\></td\></tr\><tr\><td\><img src=\\\'<?php echo $img_base ?>allianceicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(0,150,190);\\\'\><?php echo $lang_defs['faction'][0]; ?>:</b\> <b\>'+total_players_count[0]+'</b\></td\></tr\>\',2,false);" onMouseOut="h_tip();"><?php echo $lang_defs['total']; ?></b> '+eval(total_players_count[0]+total_players_count[1])+'';
   for(i = 0; i < maps_count; i++)
   {
