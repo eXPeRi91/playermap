@@ -71,6 +71,8 @@ $map_draenor_scale = isset($map_draenor_scale) ? $map_draenor_scale : 0.050000;
 $map_draenor_offset_x = isset($map_draenor_offset_x) ? $map_draenor_offset_x : 500;
 $map_draenor_offset_y = isset($map_draenor_offset_y) ? $map_draenor_offset_y : 380;
 
+$map_broken_shore_url = isset($map_broken_shore_url) ? $map_broken_shore_url : "https://www.wowhead.com/maps?data=-9";
+
 $map_legion_scale = isset($map_legion_scale) ? $map_legion_scale : 0.040;
 $map_legion_offset_x = isset($map_legion_offset_x) ? $map_legion_offset_x : 483;
 $map_legion_offset_y = isset($map_legion_offset_y) ? $map_legion_offset_y : 366;

@@ -9,6 +9,7 @@ Open pomm_conf.php and set the realmd_id
 ## Legion (7.3.5) notes
 
 - This playermap now includes tabs for **Pandaria** (870), **Draenor** (1116), and **Broken Isles** (1220).
+- Broken Shore now reads from Wowhead map source (`https://www.wowhead.com/map`), with default URL `https://www.wowhead.com/maps?data=-9`.
 - Place map images at:
   - `img/map/pandaria.jpg`
   - `img/map/draenor.jpg`
@@ -16,4 +17,5 @@ Open pomm_conf.php and set the realmd_id
 - If markers are offset on your map images, tune the map parameters in `config/playermap_config.php`:
   - `$map_pandaria_scale`, `$map_pandaria_offset_x`, `$map_pandaria_offset_y`
   - `$map_draenor_scale`, `$map_draenor_offset_x`, `$map_draenor_offset_y`
+  - `$map_broken_shore_url`
   - `$map_legion_scale`, `$map_legion_offset_x`, `$map_legion_offset_y`
