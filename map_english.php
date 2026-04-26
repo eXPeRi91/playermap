@@ -11,7 +11,11 @@ $character_race = Array(
   8 => 'Troll',
   9 => 'Goblin',
   10 => 'Blood Elf',
-  11 => 'Drenai');
+  11 => 'Drenai',
+  22 => 'Worgen',
+  24 => 'Pandaren (Neutral)',
+  25 => 'Pandaren (Alliance)',
+  26 => 'Pandaren (Horde)');
 
 $character_class = Array(
   1 => 'Warrior',
@@ -23,10 +27,12 @@ $character_class = Array(
   7 => 'Shaman',
   8 => 'Mage',
   9 => 'Warlock',
-  11 => 'Druid');
+  10 => 'Monk',
+  11 => 'Druid',
+  12 => 'Demon Hunter');
 
 $lang_defs = Array(
-  'maps_names' => Array('Azeroth','Outland','Northrend'),
+  'maps_names' => Array('Azeroth','Outland','Northrend','Broken Isles'),
   'total' => 'Total',
   'faction' => Array('Alliance', 'Horde'),
   'name' => 'Name',

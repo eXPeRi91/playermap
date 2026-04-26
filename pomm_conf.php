@@ -54,11 +54,17 @@ $time = $map_time;
 $show_time = $map_show_time;
 
 // points located on these maps(do not modify it)
-$maps_for_points = "0,1,530,571,609";
+$maps_for_points = "0,1,530,571,609,1220";
 
 $img_base = "img/map/";
 $img_base2 = "img/c_icons/";
 
 $PLAYER_FLAGS       = CHAR_DATA_OFFSET_FLAGS;
+
+// Broken Isles (Legion, map 1220) render tuning values.
+// If markers look offset for your map asset, tune these values.
+$map_legion_scale = isset($map_legion_scale) ? $map_legion_scale : 0.040;
+$map_legion_offset_x = isset($map_legion_offset_x) ? $map_legion_offset_x : 483;
+$map_legion_offset_y = isset($map_legion_offset_y) ? $map_legion_offset_y : 366;
 
 ?>
