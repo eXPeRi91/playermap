@@ -59,6 +59,7 @@ body {
     left: 50%;
     margin-left: -483px;
     background-image: url('<?php echo htmlspecialchars($map_pandaria_image_url, ENT_QUOTES, 'UTF-8'); ?>');
+    background-image: url(<?php echo htmlentities($map_pandaria_image_url); ?>);
     z-index: 7;
 }
 #draenor {
@@ -69,6 +70,7 @@ body {
     left: 50%;
     margin-left: -483px;
     background-image: url('<?php echo htmlspecialchars($map_draenor_image_url, ENT_QUOTES, 'UTF-8'); ?>');
+    background-image: url(<?php echo htmlentities($map_draenor_image_url); ?>);
     z-index: 6;
 }
 
@@ -80,6 +82,8 @@ body {
     left: 50%;
     margin-left: -483px;
     background-image: url('<?php echo htmlspecialchars($map_legion_image_url, ENT_QUOTES, 'UTF-8'); ?>');
+    background-image: url(<?php echo htmlentities($map_legion_image_url); ?>);
+    background-image: url(<?php echo $img_base ?>brokenisles.jpg);
     z-index: 7;
 }
 #pointsOldworld {
@@ -135,6 +139,7 @@ body {
     left: 50%;
     margin-left: -483px;
     z-index: 95;
+    z-index: 97;
 }
 #wow {
     position: absolute;
@@ -264,13 +269,16 @@ var show_time=<?php echo $show_time ?>;
 var show_status=<?php echo $show_status ?>;
 var maps_count = <?php echo count($lang_defs['maps_names']); ?>;
 var maps_array = new Array(<?php echo $maps_for_points ?>);
-var map_zone_image_base = <?php echo json_encode($map_remote_image_base, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
-var map_zone_image_default_phase = <?php echo (int)$map_zone_image_default_phase; ?>;
 var maps_name_array = <?php echo json_encode(array_values($lang_defs['maps_names']), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
 var race_name = <?php echo json_encode($character_race, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
 var class_name = <?php echo json_encode($character_class, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+var maps_name_array = new Array(<?php echo "'".implode("','", $lang_defs['maps_names'])."'" ?>);
+
+var race_name = {<?php echo "0:''"; foreach($character_race as $id => $race) echo(", ".$id.":'".$race."'"); ?>}
+
+var class_name = {<?php echo "0:''"; foreach($character_class as $id => $class) echo(", ".$id.":'".$class."'"); ?>}
 
 var instances_x = new Array();
 var instances_y = new Array();
@@ -425,6 +433,7 @@ function getMultiText(multitext, onClick)
     else
       group_line = '';
     data += group_line + '<tr class=\'tip_text\'><td align=\'left\'\>&nbsp;'+(multitext.current + i + 1)+'&nbsp;</td\>'+multitext.text[multitext.current + i]+'</tr\>';
+    data += group_line + '<tr class=\'tip_text\'><td align=\'left\'\>&nbsp;'+eval(multitext.current + i + 1)+'&nbsp;</td\>'+multitext.text[multitext.current + i]+'</tr\>';
     i++;
   }
   if(multitext.next > multitext.current)
@@ -587,14 +596,6 @@ function in_array(value, arr)
   return false;
 }
 
-function getZoneImageUrl(zoneId)
-{
-  var zid = Number(zoneId) || 0;
-  if(zid <= 0)
-    return '';
-  return map_zone_image_base + zid + '-' + map_zone_image_default_phase + '.jpg';
-}
-
 function getMapLayerByID(id)
 {
   switch(id)
@@ -687,6 +688,8 @@ function show(data)
     single[i] = '';
     alliance_count[i] = Number(data[i][0]) || 0;
     horde_count[i] = Number(data[i][1]) || 0;
+    alliance_count[i] = eval(data[i][0]);
+    horde_count[i] = eval(data[i][1]);
   }
 
   point_count=0;
@@ -746,11 +749,11 @@ function show(data)
       mpoints[point_count].zone = data[i].zone;
       mpoints[point_count].player = 1;
       mpoints[point_count].Extention = Number(data[i].Extention) || 0;
+      mpoints[point_count].Extention = eval(data[i].Extention);
       if(in_array(data[i].map, maps_array))
       {
         mpoints[n].faction = faction;
-        var zoneImageUrl = getZoneImageUrl(data[i].zone_id);
-        mpoints[point_count].single_text = data[i].zone+'<br\>'+data[i].level+' lvl<br\>'+char+'&nbsp;<img src=\'<?php echo $img_base2 ?>'+data[i].cl+'.gif\' style=\'float:center\' border=0 width=18 height=18\><br\>'+race_name[data[i].race]+'<br/>'+class_name[data[i].cl]+'<br/>'+(zoneImageUrl ? ('<a style=\"color:#EABA28;\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"'+zoneImageUrl+'\">Zone image</a>') : '');
+        mpoints[point_count].single_text = data[i].zone+'<br\>'+data[i].level+' lvl<br\>'+char+'&nbsp;<img src=\'<?php echo $img_base2 ?>'+data[i].cl+'.gif\' style=\'float:center\' border=0 width=18 height=18\><br\>'+race_name[data[i].race]+'<br/>'+class_name[data[i].cl]+'<br/>';
         mpoints[point_count].x = pos.x;
         mpoints[point_count].y = pos.y;
       }
@@ -813,6 +816,7 @@ function show(data)
   }
 
   document.getElementById("server_info").innerHTML='online: <b style="color: rgb(100,100,100);" onMouseMove="tip(\'<tr\><td\><img src=\\\'<?php echo $img_base ?>hordeicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(210,50,30);\\\'\><?php echo $lang_defs['faction'][1]; ?>:</b\> <b\>'+total_players_count[1]+'</b\></td\></tr\><tr\><td\><img src=\\\'<?php echo $img_base ?>allianceicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(0,150,190);\\\'\><?php echo $lang_defs['faction'][0]; ?>:</b\> <b\>'+total_players_count[0]+'</b\></td\></tr\>\',2,false);" onMouseOut="h_tip();"><?php echo $lang_defs['total']; ?></b> '+(total_players_count[0]+total_players_count[1])+'';
+  document.getElementById("server_info").innerHTML='online: <b style="color: rgb(100,100,100);" onMouseMove="tip(\'<tr\><td\><img src=\\\'<?php echo $img_base ?>hordeicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(210,50,30);\\\'\><?php echo $lang_defs['faction'][1]; ?>:</b\> <b\>'+total_players_count[1]+'</b\></td\></tr\><tr\><td\><img src=\\\'<?php echo $img_base ?>allianceicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(0,150,190);\\\'\><?php echo $lang_defs['faction'][0]; ?>:</b\> <b\>'+total_players_count[0]+'</b\></td\></tr\>\',2,false);" onMouseOut="h_tip();"><?php echo $lang_defs['total']; ?></b> '+eval(total_players_count[0]+total_players_count[1])+'';
   for(i = 0; i < maps_count; i++)
   {
     document.getElementById("server_info").innerHTML += '&nbsp;<b style="color: rgb(160,160,20); cursor:pointer;" onClick="switchworld('+i+');" onMouseMove="tip(\'<tr\><td\><img src=\\\'<?php echo $img_base ?>hordeicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(210,50,30);\\\'\><?php echo $lang_defs['faction'][1]; ?>:</b\> <b\>'+horde_count[i]+'</b\></td\></tr\><tr\><td\><img src=\\\'<?php echo $img_base ?>allianceicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(0,150,190);\\\'\><?php echo $lang_defs['faction'][0]; ?>:</b\> <b\>'+alliance_count[i]+'</b\></td\></tr\>\',2,false);" onMouseOut="h_tip();">'+maps_name_array[i]+'</b\> '+players_count[i]+'';

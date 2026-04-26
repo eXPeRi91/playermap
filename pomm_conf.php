@@ -4,8 +4,6 @@ require_once("func.php");
 require_once("config/playermap_config.php");
 require_once 'libs/data_lib.php';
 
-define('MAP_REMOTE_IMAGE_BASE_DEFAULT', 'https://wow.zamimg.com/images/wow/maps/enus/original/');
-
 
 //$realm_id = intval( $_COOKIE['cur_selected_realmd'] );
 $server_arr = $server;
@@ -13,6 +11,10 @@ $server_arr = $server;
 $realm_id = isset($_COOKIE['cur_selected_realmd']) ? intval($_COOKIE['cur_selected_realmd']) : 1;
 if(!isset($server_arr[$realm_id]))
   $realm_id = 1; // Safe fallback realm_id
+
+$realm_id = 1; // Set the realm_id
+
+$server_arr = $server;
 
 if (isset($_COOKIE["lang"]))
 {
@@ -24,6 +26,7 @@ else {$lang = $language;}
 
 
 $database_encoding = preg_match('/^[a-zA-Z0-9_\\-]+$/', $site_encoding) ? $site_encoding : 'utf8';
+$database_encoding = $site_encoding;
 
 $server = $server_arr[$realm_id]["addr"];
 $port = $server_arr[$realm_id]["game_port"];
@@ -42,6 +45,7 @@ $sql = new DBLayer($hostr, $userr, $passwordr, $dbr);
 $query = $sql->query("SELECT name FROM realmlist WHERE id = ".$realm_id);
 $realm_name = $sql->fetch_assoc($query);
 $realm_name = htmlspecialchars($realm_name["name"], ENT_QUOTES, 'UTF-8');
+$realm_name = htmlentities($realm_name["name"]);
 
 $gm_show_online = $gm_online;
 $gm_show_online_only_gmoff = $map_gm_show_online_only_gmoff;
@@ -58,6 +62,7 @@ $show_time = $map_show_time;
 
 // points located on these maps(do not modify it)
 $maps_for_points = "0,1,530,571,609,870,1116,1220";
+$maps_for_points = "0,1,530,571,609,1220";
 
 $img_base = "img/map/";
 $img_base2 = "img/c_icons/";
@@ -89,16 +94,15 @@ function build_map_image_url($baseUrl, $zoneId, $phase, $fallbackZoneId)
   $phase = sanitize_map_img_int($phase, 0);
 
   if (!isset($baseUrl) || !is_string($baseUrl))
-    $baseUrl = MAP_REMOTE_IMAGE_BASE_DEFAULT;
+    $baseUrl = "https://wow.zamimg.com/images/wow/maps/enus/original/";
 
-  if (strpos($baseUrl, MAP_REMOTE_IMAGE_BASE_DEFAULT) !== 0)
-    $baseUrl = MAP_REMOTE_IMAGE_BASE_DEFAULT;
+  if (strpos($baseUrl, "https://wow.zamimg.com/images/wow/maps/enus/original/") !== 0)
+    $baseUrl = "https://wow.zamimg.com/images/wow/maps/enus/original/";
 
   return $baseUrl.$zoneId."-".$phase.".jpg";
 }
 
-$map_remote_image_base = isset($map_remote_image_base) ? $map_remote_image_base : MAP_REMOTE_IMAGE_BASE_DEFAULT;
-$map_zone_image_default_phase = sanitize_map_img_int(isset($map_zone_image_default_phase) ? $map_zone_image_default_phase : null, 0);
+$map_remote_image_base = isset($map_remote_image_base) ? $map_remote_image_base : "https://wow.zamimg.com/images/wow/maps/enus/original/";
 
 $map_pandaria_zone_id = sanitize_map_img_int(isset($map_pandaria_zone_id) ? $map_pandaria_zone_id : null, 870);
 $map_pandaria_phase = sanitize_map_img_int(isset($map_pandaria_phase) ? $map_pandaria_phase : null, 0);
