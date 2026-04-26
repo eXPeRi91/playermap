@@ -54,7 +54,7 @@ body {
     width: 966px;
     left: 50%;
     margin-left: -483px;
-    background-image: url(<?php echo $img_base ?>pandaria.jpg);
+    background-image: url(<?php echo htmlentities($map_pandaria_image_url); ?>);
     z-index: 7;
 }
 #draenor {
@@ -64,24 +64,19 @@ body {
     width: 966px;
     left: 50%;
     margin-left: -483px;
-    background-image: url(<?php echo $img_base ?>draenor.jpg);
+    background-image: url(<?php echo htmlentities($map_draenor_image_url); ?>);
     z-index: 6;
 }
 
 #brokenisles {
     visibility: hidden;
     position: absolute;
-    overflow: hidden;
     height: 732px;
     width: 966px;
     left: 50%;
     margin-left: -483px;
+    background-image: url(<?php echo htmlentities($map_legion_image_url); ?>);
     z-index: 7;
-}
-#brokenislesMapFrame {
-    border: 0;
-    width: 966px;
-    height: 732px;
 }
 #pointsOldworld {
     position: absolute;
@@ -1024,7 +1019,7 @@ function start()
 <div ID="northrend"></div>
 <div ID="pandaria"></div>
 <div ID="draenor"></div>
-<div ID="brokenisles"><iframe id="brokenislesMapFrame" src="<?php echo htmlentities($map_broken_shore_url); ?>" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>
+<div ID="brokenisles"></div>
 <div ID="wow"><img src="<?php echo $img_base ?>realm_on.gif" id="statusIMG" style="position: absolute; border: 0px; left: 365; top: 0;" onClick="window.location='<?php echo $_SERVER['PHP_SELF'] ?>'"></a>
 </div>
 <div ID="info">
