@@ -5,6 +5,10 @@ require_once("pomm_conf.php");
 require_once("func.php");
 require_once("map_english.php");
 
+header('X-Content-Type-Options: nosniff');
+header('X-Frame-Options: SAMEORIGIN');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+
 ?>
 <HTML><HEAD><title>Online Playermap by Lasoto</title>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
@@ -47,6 +51,37 @@ body {
     background-image: url(<?php echo $img_base ?>northrend.jpg);
     z-index: 8;
 }
+#pandaria {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    background-image: url('<?php echo htmlspecialchars($map_pandaria_image_url, ENT_QUOTES, 'UTF-8'); ?>');
+    z-index: 7;
+}
+#draenor {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    background-image: url('<?php echo htmlspecialchars($map_draenor_image_url, ENT_QUOTES, 'UTF-8'); ?>');
+    z-index: 6;
+}
+
+#brokenisles {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    background-image: url('<?php echo htmlspecialchars($map_legion_image_url, ENT_QUOTES, 'UTF-8'); ?>');
+    z-index: 7;
+}
 #pointsOldworld {
     position: absolute;
     height: 732px;
@@ -72,6 +107,34 @@ body {
     left: 50%;
     margin-left: -483px;
     z-index: 98;
+}
+#pointsPandaria {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    z-index: 97;
+}
+#pointsDraenor {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    z-index: 96;
+}
+
+#pointsBrokenIsles {
+    visibility: hidden;
+    position: absolute;
+    height: 732px;
+    width: 966px;
+    left: 50%;
+    margin-left: -483px;
+    z-index: 95;
 }
 #wow {
     position: absolute;
@@ -201,11 +264,13 @@ var show_time=<?php echo $show_time ?>;
 var show_status=<?php echo $show_status ?>;
 var maps_count = <?php echo count($lang_defs['maps_names']); ?>;
 var maps_array = new Array(<?php echo $maps_for_points ?>);
-var maps_name_array = new Array(<?php echo "'".implode("','", $lang_defs['maps_names'])."'" ?>);
+var map_zone_image_base = <?php echo json_encode($map_remote_image_base, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
+var map_zone_image_default_phase = <?php echo (int)$map_zone_image_default_phase; ?>;
+var maps_name_array = <?php echo json_encode(array_values($lang_defs['maps_names']), JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
-var race_name = {<?php echo "0:''"; foreach($character_race as $id => $race) echo(", ".$id.":'".$race."'"); ?>}
+var race_name = <?php echo json_encode($character_race, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
-var class_name = {<?php echo "0:''"; foreach($character_class as $id => $class) echo(", ".$id.":'".$class."'"); ?>}
+var class_name = <?php echo json_encode($character_class, JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT); ?>;
 
 var instances_x = new Array();
 var instances_y = new Array();
@@ -226,6 +291,12 @@ instances_x[1] = { 540:593,542:586,543:593,544:588,545:393,546:399,547:388,548:3
 instances_y[1] = { 540:399,542:398,543:405,544:402,545:355,546:350,547:353,548:357,550:226,552:215,553:210,554:239,555:569,556:557,557:545,558:557,559:489,562:239,564:567,565:204 }
 instances_x[2] = { 533:568,574:749,575:751,576:161,578:159,599:553,600:605,601:395,602:575,603:559,604:740,608:470,615:491,616:155,617:457,619:400,624:363 }
 instances_y[2] = { 533:456,574:577,575:583,576:443,578:451,599:195,600:406,601:462,602:180,603:169,604:292,608:360,615:461,616:447,617:352,619:462,624:369 }
+instances_x[3] = {}
+instances_y[3] = {}
+instances_x[4] = {}
+instances_y[4] = {}
+instances_x[5] = {}
+instances_y[5] = {}
 
 var fade_colors = Array('C6B711','BDAF10','B7A910','B1A40F','AB9E0F','A4980E','9E920E','988C0D','92870D','8B800C','857B0B','7F750B','79700A','746B0A','6E6609','686009','625B08','5C5508','564F07','504A07','4A4406','443F05','3E3905','383404','312D04','2A2703','232002','1C1A02','141201','000000');
 var fade_cur_color = fade_colors.length-1;
@@ -353,7 +424,7 @@ function getMultiText(multitext, onClick)
       group_line = '<tr\><td colspan=\'7\' bgcolor=\'#11FF99\' height=\'1px\'\></td\></tr\>';
     else
       group_line = '';
-    data += group_line + '<tr class=\'tip_text\'><td align=\'left\'\>&nbsp;'+eval(multitext.current + i + 1)+'&nbsp;</td\>'+multitext.text[multitext.current + i]+'</tr\>';
+    data += group_line + '<tr class=\'tip_text\'><td align=\'left\'\>&nbsp;'+(multitext.current + i + 1)+'&nbsp;</td\>'+multitext.text[multitext.current + i]+'</tr\>';
     i++;
   }
   if(multitext.next > multitext.current)
@@ -441,6 +512,18 @@ function get_player_position(x,y,m)
    xpos = Math.round(x * 0.050085);
    ypos = Math.round(y * 0.050085);
    }
+ else if(m == 870) { // Pandaria
+   xpos = Math.round(x * <?php echo $map_pandaria_scale; ?>);
+   ypos = Math.round(y * <?php echo $map_pandaria_scale; ?>);
+   }
+ else if(m == 1116) { // Draenor
+   xpos = Math.round(x * <?php echo $map_draenor_scale; ?>);
+   ypos = Math.round(y * <?php echo $map_draenor_scale; ?>);
+   }
+ else if(m == 1220) { // Broken Isles (Legion)
+   xpos = Math.round(x * <?php echo $map_legion_scale; ?>);
+   ypos = Math.round(y * <?php echo $map_legion_scale; ?>);
+   }
  else {              //Azeroth
    xpos = Math.round(x * 0.025140);
    ypos = Math.round(y * 0.025140);
@@ -464,6 +547,18 @@ function get_player_position(x,y,m)
    case '609':
     pos.x = 896 - ypos;
     pos.y = 232 - xpos;
+    break;
+   case '870':
+    pos.x = <?php echo (int)$map_pandaria_offset_x; ?> - ypos;
+    pos.y = <?php echo (int)$map_pandaria_offset_y; ?> - xpos;
+    break;
+   case '1116':
+    pos.x = <?php echo (int)$map_draenor_offset_x; ?> - ypos;
+    pos.y = <?php echo (int)$map_draenor_offset_y; ?> - xpos;
+    break;
+   case '1220':
+    pos.x = <?php echo (int)$map_legion_offset_x; ?> - ypos;
+    pos.y = <?php echo (int)$map_legion_offset_y; ?> - xpos;
     break;
    case '1':
     pos.x = 194 - ypos;
@@ -492,6 +587,14 @@ function in_array(value, arr)
   return false;
 }
 
+function getZoneImageUrl(zoneId)
+{
+  var zid = Number(zoneId) || 0;
+  if(zid <= 0)
+    return '';
+  return map_zone_image_base + zid + '-' + map_zone_image_default_phase + '.jpg';
+}
+
 function getMapLayerByID(id)
 {
   switch(id)
@@ -502,6 +605,12 @@ function getMapLayerByID(id)
       return document.getElementById("outland"); break;
     case 2:
       return document.getElementById("northrend"); break;
+    case 3:
+      return document.getElementById("pandaria"); break;
+    case 4:
+      return document.getElementById("draenor"); break;
+    case 5:
+      return document.getElementById("brokenisles"); break;
     default:
       return null;
   }
@@ -517,6 +626,12 @@ function getPointsLayerByID(id)
       return document.getElementById("pointsOutland"); break;
     case 2:
       return document.getElementById("pointsNorthrend"); break;
+    case 3:
+      return document.getElementById("pointsPandaria"); break;
+    case 4:
+      return document.getElementById("pointsDraenor"); break;
+    case 5:
+      return document.getElementById("pointsBrokenIsles"); break;
     default:
       return null;
   }
@@ -570,8 +685,8 @@ function show(data)
     instances[i] = '';
     groups[i] = '';
     single[i] = '';
-    alliance_count[i] = eval(data[i][0]);
-    horde_count[i] = eval(data[i][1]);
+    alliance_count[i] = Number(data[i][0]) || 0;
+    horde_count[i] = Number(data[i][1]) || 0;
   }
 
   point_count=0;
@@ -630,11 +745,12 @@ function show(data)
       mpoints[point_count].name = data[i].name;
       mpoints[point_count].zone = data[i].zone;
       mpoints[point_count].player = 1;
-      mpoints[point_count].Extention = eval(data[i].Extention);
+      mpoints[point_count].Extention = Number(data[i].Extention) || 0;
       if(in_array(data[i].map, maps_array))
       {
         mpoints[n].faction = faction;
-        mpoints[point_count].single_text = data[i].zone+'<br\>'+data[i].level+' lvl<br\>'+char+'&nbsp;<img src=\'<?php echo $img_base2 ?>'+data[i].cl+'.gif\' style=\'float:center\' border=0 width=18 height=18\><br\>'+race_name[data[i].race]+'<br/>'+class_name[data[i].cl]+'<br/>';
+        var zoneImageUrl = getZoneImageUrl(data[i].zone_id);
+        mpoints[point_count].single_text = data[i].zone+'<br\>'+data[i].level+' lvl<br\>'+char+'&nbsp;<img src=\'<?php echo $img_base2 ?>'+data[i].cl+'.gif\' style=\'float:center\' border=0 width=18 height=18\><br\>'+race_name[data[i].race]+'<br/>'+class_name[data[i].cl]+'<br/>'+(zoneImageUrl ? ('<a style=\"color:#EABA28;\" target=\"_blank\" rel=\"noopener noreferrer\" href=\"'+zoneImageUrl+'\">Zone image</a>') : '');
         mpoints[point_count].x = pos.x;
         mpoints[point_count].y = pos.y;
       }
@@ -667,7 +783,10 @@ function show(data)
   while(n!=point_count)
   {
     if(!in_array(mpoints[n].map_id, maps_array))
-      instances[mpoints[n].Extention] += '<img src="<?php echo $img_base ?>inst-icon.gif" style="position: absolute; border: 0px; left: '+instances_x[mpoints[n].Extention][mpoints[n].map_id]+'px; top: '+instances_y[mpoints[n].Extention][mpoints[n].map_id]+'px;" onMouseMove="tip(mpoints['+n+'],1,false);" onMouseDown="tip(mpoints['+n+'],1,true);" onMouseOut="h_tip();mpoints['+n+'].multi_text.current=0;"\>';
+    {
+      if(instances_x[mpoints[n].Extention] && instances_y[mpoints[n].Extention] && instances_x[mpoints[n].Extention][mpoints[n].map_id] != undefined && instances_y[mpoints[n].Extention][mpoints[n].map_id] != undefined)
+        instances[mpoints[n].Extention] += '<img src="<?php echo $img_base ?>inst-icon.gif" style="position: absolute; border: 0px; left: '+instances_x[mpoints[n].Extention][mpoints[n].map_id]+'px; top: '+instances_y[mpoints[n].Extention][mpoints[n].map_id]+'px;" onMouseMove="tip(mpoints['+n+'],1,false);" onMouseDown="tip(mpoints['+n+'],1,true);" onMouseOut="h_tip();mpoints['+n+'].multi_text.current=0;"\>';
+    }
     else if(mpoints[n].player > 1)
       groups[mpoints[n].Extention] += '<img src="<?php echo $img_base ?>group-icon.gif" style="position: absolute; border: 0px; left: '+mpoints[n].x+'px; top: '+mpoints[n].y+'px;" onMouseMove="tip(mpoints['+n+'],1,false);" onMouseDown="tip(mpoints['+n+'],1,true);" onMouseOut="h_tip();mpoints['+n+'].multi_text.current=0;"\>';
     else
@@ -693,7 +812,7 @@ function show(data)
     total_players_count[1] += horde_count[i];
   }
 
-  document.getElementById("server_info").innerHTML='online: <b style="color: rgb(100,100,100);" onMouseMove="tip(\'<tr\><td\><img src=\\\'<?php echo $img_base ?>hordeicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(210,50,30);\\\'\><?php echo $lang_defs['faction'][1]; ?>:</b\> <b\>'+total_players_count[1]+'</b\></td\></tr\><tr\><td\><img src=\\\'<?php echo $img_base ?>allianceicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(0,150,190);\\\'\><?php echo $lang_defs['faction'][0]; ?>:</b\> <b\>'+total_players_count[0]+'</b\></td\></tr\>\',2,false);" onMouseOut="h_tip();"><?php echo $lang_defs['total']; ?></b> '+eval(total_players_count[0]+total_players_count[1])+'';
+  document.getElementById("server_info").innerHTML='online: <b style="color: rgb(100,100,100);" onMouseMove="tip(\'<tr\><td\><img src=\\\'<?php echo $img_base ?>hordeicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(210,50,30);\\\'\><?php echo $lang_defs['faction'][1]; ?>:</b\> <b\>'+total_players_count[1]+'</b\></td\></tr\><tr\><td\><img src=\\\'<?php echo $img_base ?>allianceicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(0,150,190);\\\'\><?php echo $lang_defs['faction'][0]; ?>:</b\> <b\>'+total_players_count[0]+'</b\></td\></tr\>\',2,false);" onMouseOut="h_tip();"><?php echo $lang_defs['total']; ?></b> '+(total_players_count[0]+total_players_count[1])+'';
   for(i = 0; i < maps_count; i++)
   {
     document.getElementById("server_info").innerHTML += '&nbsp;<b style="color: rgb(160,160,20); cursor:pointer;" onClick="switchworld('+i+');" onMouseMove="tip(\'<tr\><td\><img src=\\\'<?php echo $img_base ?>hordeicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(210,50,30);\\\'\><?php echo $lang_defs['faction'][1]; ?>:</b\> <b\>'+horde_count[i]+'</b\></td\></tr\><tr\><td\><img src=\\\'<?php echo $img_base ?>allianceicon.gif\\\'\></td\><td\><b style=\\\'color: rgb(0,150,190);\\\'\><?php echo $lang_defs['faction'][0]; ?>:</b\> <b\>'+alliance_count[i]+'</b\></td\></tr\>\',2,false);" onMouseOut="h_tip();">'+maps_name_array[i]+'</b\> '+players_count[i]+'';
@@ -907,9 +1026,15 @@ function start()
 <div ID="pointsOldworld"></div>
 <div ID="pointsOutland"></div>
 <div ID="pointsNorthrend"></div>
+<div ID="pointsPandaria"></div>
+<div ID="pointsDraenor"></div>
+<div ID="pointsBrokenIsles"></div>
 <div ID="world"></div>
 <div ID="outland"></div>
 <div ID="northrend"></div>
+<div ID="pandaria"></div>
+<div ID="draenor"></div>
+<div ID="brokenisles"></div>
 <div ID="wow"><img src="<?php echo $img_base ?>realm_on.gif" id="statusIMG" style="position: absolute; border: 0px; left: 365; top: 0;" onClick="window.location='<?php echo $_SERVER['PHP_SELF'] ?>'"></a>
 </div>
 <div ID="info">
