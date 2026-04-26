@@ -21,3 +21,6 @@ Open pomm_conf.php and set the realmd_id
   - `$map_draenor_zone_id`, `$map_draenor_phase`
   - `$map_legion_zone_id`, `$map_legion_phase`
   - `$map_legion_scale`, `$map_legion_offset_x`, `$map_legion_offset_y`
+- This playermap now includes a **Broken Isles** tab (map 1220).
+- Place your Legion world image at `img/map/brokenisles.jpg`.
+- If markers are offset on your map image, tune `$map_legion_scale`, `$map_legion_offset_x`, and `$map_legion_offset_y` in `config/playermap_config.php`.

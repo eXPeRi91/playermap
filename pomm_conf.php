@@ -55,6 +55,7 @@ $show_time = $map_show_time;
 
 // points located on these maps(do not modify it)
 $maps_for_points = "0,1,530,571,609,870,1116,1220";
+$maps_for_points = "0,1,530,571,609,1220";
 
 $img_base = "img/map/";
 $img_base2 = "img/c_icons/";

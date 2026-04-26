@@ -76,6 +76,7 @@ body {
     left: 50%;
     margin-left: -483px;
     background-image: url(<?php echo htmlentities($map_legion_image_url); ?>);
+    background-image: url(<?php echo $img_base ?>brokenisles.jpg);
     z-index: 7;
 }
 #pointsOldworld {
@@ -131,6 +132,7 @@ body {
     left: 50%;
     margin-left: -483px;
     z-index: 95;
+    z-index: 97;
 }
 #wow {
     position: absolute;
