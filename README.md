@@ -12,6 +12,7 @@ Open pomm_conf.php and set the realmd_id
 - Added maps now load from ZAM image host using this fixed pattern:
   - `https://wow.zamimg.com/images/wow/maps/enus/original/<zone>-<phase>.jpg`
   - Example (Broken Shore): `https://wow.zamimg.com/images/wow/maps/enus/original/7543-0.jpg`
+- Important: use **Wowhead zone IDs** (not map IDs) for `<zone>`.
 - If markers are offset on your map images, tune the map parameters in `config/playermap_config.php`:
   - `$map_pandaria_scale`, `$map_pandaria_offset_x`, `$map_pandaria_offset_y`
   - `$map_draenor_scale`, `$map_draenor_offset_x`, `$map_draenor_offset_y`

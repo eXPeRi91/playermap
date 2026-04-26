@@ -99,14 +99,14 @@ $map_remote_image_base = isset($map_remote_image_base) ? $map_remote_image_base 
 $map_pandaria_zone_id = sanitize_map_img_int(isset($map_pandaria_zone_id) ? $map_pandaria_zone_id : null, 870);
 $map_pandaria_phase = sanitize_map_img_int(isset($map_pandaria_phase) ? $map_pandaria_phase : null, 0);
 
-$map_draenor_zone_id = sanitize_map_img_int(isset($map_draenor_zone_id) ? $map_draenor_zone_id : null, 1116);
+$map_draenor_zone_id = sanitize_map_img_int(isset($map_draenor_zone_id) ? $map_draenor_zone_id : null, 5723);
 $map_draenor_phase = sanitize_map_img_int(isset($map_draenor_phase) ? $map_draenor_phase : null, 0);
 
 $map_legion_zone_id = sanitize_map_img_int(isset($map_legion_zone_id) ? $map_legion_zone_id : null, 7543);
 $map_legion_phase = sanitize_map_img_int(isset($map_legion_phase) ? $map_legion_phase : null, 0);
 
 $map_pandaria_image_url = build_map_image_url($map_remote_image_base, $map_pandaria_zone_id, $map_pandaria_phase, 870);
-$map_draenor_image_url = build_map_image_url($map_remote_image_base, $map_draenor_zone_id, $map_draenor_phase, 1116);
+$map_draenor_image_url = build_map_image_url($map_remote_image_base, $map_draenor_zone_id, $map_draenor_phase, 5723);
 $map_legion_image_url = build_map_image_url($map_remote_image_base, $map_legion_zone_id, $map_legion_phase, 7543);
 
 $map_legion_scale = isset($map_legion_scale) ? $map_legion_scale : 0.040;
