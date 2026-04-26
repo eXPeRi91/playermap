@@ -1,5 +1,9 @@
 # AzerothShard Playermap
 
+Current version: **1.0.0.A** (Alpha)
+
+For setup steps, see **[INSTALLATION.md](INSTALLATION.md)**.
+
 ## Configure
 
 Make a copy of config/playermap_config.php.conf and configure it.
