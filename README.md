@@ -27,3 +27,6 @@ Open pomm_conf.php and set the realmd_id
 - Player names and zone labels are HTML-escaped before being sent to the browser in `pomm_play.php`.
 - Map URLs are generated from sanitized integer zone/phase values and a fixed allowed base prefix.
 - Realm selection cookie (`cur_selected_realmd`) is validated and falls back safely to realm `1`.
+- This playermap now includes a **Broken Isles** tab (map 1220).
+- Place your Legion world image at `img/map/brokenisles.jpg`.
+- If markers are offset on your map image, tune `$map_legion_scale`, `$map_legion_offset_x`, and `$map_legion_offset_y` in `config/playermap_config.php`.

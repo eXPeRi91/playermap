@@ -12,6 +12,10 @@ $realm_id = isset($_COOKIE['cur_selected_realmd']) ? intval($_COOKIE['cur_select
 if(!isset($server_arr[$realm_id]))
   $realm_id = 1; // Safe fallback realm_id
 
+$realm_id = 1; // Set the realm_id
+
+$server_arr = $server;
+
 if (isset($_COOKIE["lang"]))
 {
   $lang = "en";
@@ -22,6 +26,7 @@ else {$lang = $language;}
 
 
 $database_encoding = preg_match('/^[a-zA-Z0-9_\\-]+$/', $site_encoding) ? $site_encoding : 'utf8';
+$database_encoding = $site_encoding;
 
 $server = $server_arr[$realm_id]["addr"];
 $port = $server_arr[$realm_id]["game_port"];
@@ -40,6 +45,7 @@ $sql = new DBLayer($hostr, $userr, $passwordr, $dbr);
 $query = $sql->query("SELECT name FROM realmlist WHERE id = ".$realm_id);
 $realm_name = $sql->fetch_assoc($query);
 $realm_name = htmlspecialchars($realm_name["name"], ENT_QUOTES, 'UTF-8');
+$realm_name = htmlentities($realm_name["name"]);
 
 $gm_show_online = $gm_online;
 $gm_show_online_only_gmoff = $map_gm_show_online_only_gmoff;
@@ -56,6 +62,7 @@ $show_time = $map_show_time;
 
 // points located on these maps(do not modify it)
 $maps_for_points = "0,1,530,571,609,870,1116,1220";
+$maps_for_points = "0,1,530,571,609,1220";
 
 $img_base = "img/map/";
 $img_base2 = "img/c_icons/";
